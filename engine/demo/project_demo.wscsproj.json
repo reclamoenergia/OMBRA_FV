@@ -1,0 +1,8 @@
+{
+  "name": "demo",
+  "project_epsg": 32633,
+  "aoi_path": "aoi_demo.shp",
+  "turbines_csv": "turbines_demo.csv",
+  "min_solar_elevation_deg": 0,
+  "last_outputs": {}
+}

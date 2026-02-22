@@ -1,0 +1,47 @@
+name: windows-build
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - name: Build engine exe
+        run: |
+          cd engine
+          pip install -r requirements.txt pyinstaller
+          python demo/generate_demo_data.py
+          pyinstaller --onefile -n engine api/main.py
+          mkdir -p ../desktop/engine_bin
+          copy dist\engine.exe ..\desktop\engine_bin\engine.exe
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - name: Build desktop installer
+        run: |
+          cd desktop
+          npm ci
+          npm run tauri build
+      - name: Smoke demo engine
+        run: |
+          cd engine
+          python demo/generate_demo_data.py
+          python tests/smoke_demo.py
+      - name: Checksums
+        shell: pwsh
+        run: |
+          Get-ChildItem -Path desktop/src-tauri/target/release/bundle -Recurse -Include *.msi,*.exe | ForEach-Object {
+            $h = Get-FileHash $_.FullName -Algorithm SHA256
+            "$($h.Hash)  $($_.Name)" | Out-File -FilePath checksums.txt -Append
+          }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wind-shadow-installer
+          path: |
+            desktop/src-tauri/target/release/bundle/**
+            checksums.txt

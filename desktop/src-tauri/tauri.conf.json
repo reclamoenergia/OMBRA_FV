@@ -1,0 +1,13 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Wind Shadow Calendar Studio",
+  "version": "0.1.0",
+  "identifier": "com.ombra.windshadow",
+  "build": { "beforeDevCommand": "npm run dev", "beforeBuildCommand": "npm run build", "frontendDist": "../dist", "devUrl": "http://localhost:5173" },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "externalBin": ["../engine_bin/engine"]
+  },
+  "app": { "windows": [{"title": "Wind Shadow Calendar Studio", "width": 1400, "height": 900}] }
+}
