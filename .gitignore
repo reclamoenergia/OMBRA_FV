@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+node_modules/
+dist/
+*.log
+engine/demo/outputs/
+engine/demo/*.shp
+engine/demo/*.shx
+engine/demo/*.dbf
+desktop/src-tauri/target/
